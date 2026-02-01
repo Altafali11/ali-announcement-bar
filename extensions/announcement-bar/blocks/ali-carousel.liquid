@@ -1,0 +1,142 @@
+<style>
+.ali-carousel{width:100%;overflow:hidden;position:relative}
+.ali-carousel__track{display:flex;transition:transform .5s ease}
+.ali-carousel__slide{min-width:100%}
+.ali-carousel__slide img{width:100%;display:block}
+
+.ali-carousel__nav{
+ position:absolute;top:50%;transform:translateY(-50%);
+ width:36px;height:36px;border:none;cursor:pointer;
+ background:rgba(255,255,255,.8);border-radius:50%
+}
+.ali-carousel__nav--prev{left:15px}
+.ali-carousel__nav--next{right:15px}
+
+.ali-carousel__dots{
+ position:absolute;bottom:12px;left:0;right:0;
+ display:flex;justify-content:center;gap:8px
+}
+.ali-carousel__dot{
+ width:10px;height:10px;border-radius:50%;
+ background:rgba(255,255,255,.5);border:none;cursor:pointer
+}
+.ali-carousel__dot.active{background:white}
+</style>
+
+<div class="ali-carousel" id="ali-carousel-{{ block.id }}">
+  <div class="ali-carousel__track">
+
+    {% if block.settings.image_1 != blank %}
+      <div class="ali-carousel__slide">
+        <img
+          src="{{ block.settings.image_1 | image_url: width:2000 }}"
+          width="2000"
+          height="800"
+          loading="lazy"
+        >
+      </div>
+    {% endif %}
+
+    {% if block.settings.image_2 != blank %}
+      <div class="ali-carousel__slide">
+        <img
+          src="{{ block.settings.image_2 | image_url: width:2000 }}"
+          width="2000"
+          height="800"
+          loading="lazy"
+        >
+      </div>
+    {% endif %}
+
+    {% if block.settings.image_3 != blank %}
+      <div class="ali-carousel__slide">
+        <img
+          src="{{ block.settings.image_3 | image_url: width:2000 }}"
+          width="2000"
+          height="800"
+          loading="lazy"
+        >
+      </div>
+    {% endif %}
+
+    {% if block.settings.image_4 != blank %}
+      <div class="ali-carousel__slide">
+        <img
+          src="{{ block.settings.image_4 | image_url: width:2000 }}"
+          width="2000"
+          height="800"
+          loading="lazy"
+        >
+      </div>
+    {% endif %}
+
+    {% if block.settings.image_5 != blank %}
+      <div class="ali-carousel__slide">
+        <img
+          src="{{ block.settings.image_5 | image_url: width:2000 }}"
+          width="2000"
+          height="800"
+          loading="lazy"
+        >
+      </div>
+    {% endif %}
+
+  </div>
+
+  <button class="ali-carousel__nav ali-carousel__nav--prev">‹</button>
+  <button class="ali-carousel__nav ali-carousel__nav--next">›</button>
+  <div class="ali-carousel__dots"></div>
+</div>
+
+<script>
+(function(){
+ const section=document.getElementById("ali-carousel-{{ block.id }}");
+ if(!section) return;
+
+ const track=section.querySelector('.ali-carousel__track');
+ const slides=section.querySelectorAll('.ali-carousel__slide');
+ const prev=section.querySelector('.ali-carousel__nav--prev');
+ const next=section.querySelector('.ali-carousel__nav--next');
+ const dotsWrap=section.querySelector('.ali-carousel__dots');
+
+ let index=0,total=slides.length;
+ if(total<=1) return;
+
+ for(let i=0;i<total;i++){
+   const d=document.createElement('button');
+   d.className='ali-carousel__dot'+(i===0?' active':'');
+   d.onclick=()=>{ index=i; update(); };
+   dotsWrap.appendChild(d);
+ }
+
+ function update(){
+   track.style.transform=`translateX(-${index*100}%)`;
+   dotsWrap.querySelectorAll('button').forEach((d,i)=>{
+     d.classList.toggle('active',i===index);
+   });
+ }
+
+ next.onclick=()=>{ index=(index+1)%total; update(); };
+ prev.onclick=()=>{ index=(index-1+total)%total; update(); };
+
+ {% if block.settings.auto_rotate %}
+ setInterval(()=>{ index=(index+1)%total; update(); }, {{ block.settings.delay | times:1000 }});
+ {% endif %}
+})();
+</script>
+
+{% schema %}
+{
+ "name": "Ali Carousel",
+ "target": "section",
+ "settings": [
+   {"type":"image_picker","id":"image_1","label":"Slide 1"},
+   {"type":"image_picker","id":"image_2","label":"Slide 2"},
+   {"type":"image_picker","id":"image_3","label":"Slide 3"},
+   {"type":"image_picker","id":"image_4","label":"Slide 4"},
+   {"type":"image_picker","id":"image_5","label":"Slide 5"},
+   {"type":"checkbox","id":"auto_rotate","label":"Auto rotate","default":false},
+   {"type":"range","id":"delay","label":"Rotate every","min":3,"max":10,"step":1,"unit":"s","default":5}
+ ]
+}
+{% endschema %}

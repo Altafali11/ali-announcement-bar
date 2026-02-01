@@ -1,0 +1,38 @@
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "target": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Announcement text",
+      "default": "Welcome to our store!"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    }
+  ]
+}
+{% endschema %}
+
+<div
+  style="
+    background-color: {{ block.settings.bg_color }};
+    color: {{ block.settings.text_color }};
+    padding: 12px;
+    text-align: center;
+    font-weight: 600;
+  "
+>
+  {{ block.settings.text }}
+</div>
