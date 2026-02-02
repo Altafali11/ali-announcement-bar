@@ -70,7 +70,7 @@ export default function Index() {
         <br /><br />
 
         <s-button
-          href="https://your-company-website.com"
+          href="https://www.socialcroww.com/"
           target="_blank"
           variant="secondary"
         >
